@@ -18,19 +18,18 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Install Android Command Line Utilities
+    - name: Install Android Tools
       uses: android-actions/setup-android@v3
 
-    - name: Generate Native Gradle Wrapper Files
+    - name: Create Gradle Environment
       run: |
-        # This initializes the official system environment binaries on the fly
         gradle wrapper --gradle-version 8.1.1
         chmod +x gradlew
 
-    - name: Compile Debug APK Binary
-      run: ./gradlew assembleDebug --stacktrace --no-daemon
+    - name: Compile Application Debug APK
+      run: ./gradlew :app:assembleDebug --stacktrace --no-daemon
 
-    - name: Upload Finished APK Installer
+    - name: Upload Finalized APK
       uses: actions/upload-artifact@v4
       with:
         name: torch-streamer-apk
