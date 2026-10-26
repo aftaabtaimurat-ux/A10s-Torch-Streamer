@@ -9,21 +9,24 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout Repository
+      uses: actions/checkout@v4
 
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
-        java-version: '17'
         distribution: 'temurin'
+        java-version: '17'
 
-    - name: Set up Android SDK
-      uses: android-actions/setup-android@v3
+    - name: Automatically Initialize and Run Gradle Compiler
+      uses: gradle/actions/setup-gradle@v4
+      with:
+        gradle-version: 8.1.1 # Dynamically downloads matching tools in cloud
 
-    - name: Build Debug APK
-      run: gradle assembleDebug
+    - name: Compile Debug APK Binary
+      run: gradle assembleDebug --stacktrace
 
-    - name: Upload APK Artifact
+    - name: Extract and Upload APK Installer
       uses: actions/upload-artifact@v4
       with:
         name: torch-streamer-apk
