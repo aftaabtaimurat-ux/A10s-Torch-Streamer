@@ -18,16 +18,13 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Set up Gradle Environment
-      uses: gradle/actions/setup-gradle@v4
-      with:
-        gradle-version: 8.1.1
-
-    - name: Compile Application Debug APK Fast
+    - name: Generate Local Wrapper Scripts
       run: |
-        # --no-daemon stops background freezes
-        # --parallel uses all processor cores to finish under 2 minutes
-        gradle :app:assembleDebug --no-daemon --parallel --build-cache
+        gradle wrapper --gradle-version 8.1.1
+        chmod +x gradlew
+
+    - name: Compile Application Debug APK
+      run: ./gradlew :app:assembleDebug --stacktrace --no-daemon
 
     - name: Upload Finalized APK
       uses: actions/upload-artifact@v4
