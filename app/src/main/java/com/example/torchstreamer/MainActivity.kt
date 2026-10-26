@@ -10,7 +10,11 @@ import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import okhttp3.*
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.WebSocket
+import okhttp3.WebSocketListener
+import okio.ByteString
 import java.io.ByteArrayOutputStream
 
 class MainActivity : AppCompatActivity() {
@@ -19,7 +23,9 @@ class MainActivity : AppCompatActivity() {
     private var captureSession: CameraCaptureSession? = null
     private var webSocket: WebSocket? = null
     private val client = OkHttpClient()
-    private val serverUrl = "ws://192.168.1.43:3000" // ⚠️ CHANGE TO YOUR PC IP ADDRESS
+    
+    // ⚠️ CHANGE THIS VALUE TO MATCH YOUR CURRENT WINDOWS PC IP ADDRESS
+    private val serverUrl = "ws://192.168.1.43:3000" 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,15 +58,26 @@ class MainActivity : AppCompatActivity() {
         val imageReader = android.media.ImageReader.newInstance(640, 480, ImageFormat.YUV_420_888, 2)
         imageReader.setOnImageAvailableListener({ reader ->
             val image = reader.acquireLatestImage() ?: return@setOnImageAvailableListener
+            
             val yBuffer = image.planes[0].buffer
             val uBuffer = image.planes[1].buffer
             val vBuffer = image.planes[2].buffer
-            val nv21 = ByteArray(yBuffer.remaining() + uBuffer.remaining() + vBuffer.remaining())
-            yBuffer.get(nv21, 0, yBuffer.remaining())
+            
+            val ySize = yBuffer.remaining()
+            val uSize = uBuffer.remaining()
+            val vSize = vBuffer.remaining()
+            
+            val nv21 = ByteArray(ySize + uSize + vSize)
+            yBuffer.get(nv21, 0, ySize)
+            vBuffer.get(nv21, ySize, vSize)
+            uBuffer.get(nv21, ySize + vSize, uSize)
+            
             val bos = ByteArrayOutputStream()
             val yuvImage = YuvImage(nv21, ImageFormat.NV21, image.width, image.height, null)
             yuvImage.compressToJpeg(Rect(0, 0, image.width, image.height), 40, bos)
-            webSocket?.send(okio.ByteString.of(*bos.toByteArray()))
+            
+            val payload = ByteString.of(*bos.toByteArray())
+            webSocket?.send(payload)
             image.close()
         }, null)
 
