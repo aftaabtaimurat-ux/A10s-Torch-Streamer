@@ -18,11 +18,13 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Run Clean Gradle Build Action
-      uses: gradle/gradle-build-action@v3
+    - name: Set up Gradle
+      uses: gradle/actions/setup-gradle@v4
       with:
         gradle-version: 8.1.1
-        arguments: assembleDebug --stacktrace
+
+    - name: Compile Debug APK
+      run: gradle :app:assembleDebug --stacktrace --no-daemon
 
     - name: Upload Finished APK
       uses: actions/upload-artifact@v4
