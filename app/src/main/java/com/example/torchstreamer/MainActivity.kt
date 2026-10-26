@@ -1,5 +1,6 @@
 package com.example.torchstreamer
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.ImageFormat
 import android.graphics.Rect
@@ -9,7 +10,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.WebSocket
@@ -17,15 +17,13 @@ import okhttp3.WebSocketListener
 import okio.ByteString
 import java.io.ByteArrayOutputStream
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : Activity() {
     private lateinit var cameraManager: CameraManager
     private var cameraDevice: CameraDevice? = null
     private var captureSession: CameraCaptureSession? = null
     private var webSocket: WebSocket? = null
     private val client = OkHttpClient()
-    
-    // ⚠️ CHANGE THIS VALUE TO MATCH YOUR CURRENT WINDOWS PC IP ADDRESS
-    private val serverUrl = "ws://192.168.1.43:3000" 
+    private val serverUrl = "ws://192.168.1.43:3000" // ⚠️ CHANGE THIS VALUE TO MATCH YOUR CURRENT WINDOWS PC IP ADDRESS
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +57,6 @@ class MainActivity : AppCompatActivity() {
         imageReader.setOnImageAvailableListener({ reader ->
             val image = reader.acquireLatestImage() ?: return@setOnImageAvailableListener
             
-            // SYNTAX FIX: Target explicit camera array indices directly
             val planes = image.planes
             val yBuffer = planes[0].buffer
             val uBuffer = planes[1].buffer
