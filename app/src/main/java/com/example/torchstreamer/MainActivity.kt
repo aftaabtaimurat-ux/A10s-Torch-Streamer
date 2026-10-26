@@ -23,7 +23,9 @@ class MainActivity : AppCompatActivity() {
     private var captureSession: CameraCaptureSession? = null
     private var webSocket: WebSocket? = null
     private val client = OkHttpClient()
-    private val serverUrl = "ws://192.168.1.43:3000" // ⚠️ CORRESPONDS TO YOUR PC IP ADDRESS
+    
+    // ⚠️ CHANGE THIS VALUE TO MATCH YOUR CURRENT WINDOWS PC IP ADDRESS
+    private val serverUrl = "ws://192.168.1.43:3000" 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         imageReader.setOnImageAvailableListener({ reader ->
             val image = reader.acquireLatestImage() ?: return@setOnImageAvailableListener
             
-            // SYNTAX FIX: Extracted as a native array object first
+            // SYNTAX FIX: Target explicit camera array indices directly
             val planes = image.planes
             val yBuffer = planes[0].buffer
             val uBuffer = planes[1].buffer
