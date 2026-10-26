@@ -18,16 +18,16 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Automatically Initialize and Run Gradle Compiler
+    - name: Set up Gradle
       uses: gradle/actions/setup-gradle@v4
       with:
-        gradle-version: 8.1.1 # Dynamically downloads matching tools in cloud
+        gradle-version: 8.1.1
 
-    - name: Compile Debug APK Binary
+    - name: Compile Debug APK
       run: gradle assembleDebug --stacktrace
 
-    - name: Extract and Upload APK Installer
+    - name: Upload APK Installer
       uses: actions/upload-artifact@v4
       with:
         name: torch-streamer-apk
-        path: app/build/outputs/apk/debug/app-debug.apk
+        path: build/outputs/apk/debug/app-debug.apk
