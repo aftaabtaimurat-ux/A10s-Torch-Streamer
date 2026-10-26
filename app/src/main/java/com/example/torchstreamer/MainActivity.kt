@@ -25,8 +25,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         cameraManager = getSystemService(Context.CAMERA_SERVICE) as CameraManager
         connectWebSocket()
-
-        // Force full capacity torch stream immediately when app icon is tapped
         startFullPowerCameraStreaming()
         Toast.makeText(this, "Streaming at 100% Full Capacity...", Toast.LENGTH_LONG).show()
     }
