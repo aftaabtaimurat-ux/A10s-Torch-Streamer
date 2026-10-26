@@ -23,9 +23,7 @@ class MainActivity : AppCompatActivity() {
     private var captureSession: CameraCaptureSession? = null
     private var webSocket: WebSocket? = null
     private val client = OkHttpClient()
-    
-    // ⚠️ CHANGE THIS VALUE TO MATCH YOUR CURRENT WINDOWS PC IP ADDRESS
-    private val serverUrl = "ws://192.168.1.43:3000" 
+    private val serverUrl = "ws://192.168.1.43:3000" // ⚠️ CHANGE THIS TO YOUR WINDOWS PC IP ADDRESS
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,9 +57,11 @@ class MainActivity : AppCompatActivity() {
         imageReader.setOnImageAvailableListener({ reader ->
             val image = reader.acquireLatestImage() ?: return@setOnImageAvailableListener
             
-            val yBuffer = image.planes[0].buffer
-            val uBuffer = image.planes[1].buffer
-            val vBuffer = image.planes[2].buffer
+            // CORRECTLY INDEX EACH INDEPENDENT COLOR PLANE (Y, U, V)
+            val planes = image.planes
+            val yBuffer = planes[0].buffer
+            val uBuffer = planes[1].buffer
+            val vBuffer = planes[2].buffer
             
             val ySize = yBuffer.remaining()
             val uSize = uBuffer.remaining()
