@@ -9,7 +9,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout Repository
+    - name: Checkout Code
       uses: actions/checkout@v4
 
     - name: Set up JDK 17
@@ -18,15 +18,19 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Set up Gradle
-      uses: gradle/actions/setup-gradle@v4
-      with:
-        gradle-version: 8.1.1
+    - name: Install Android Command Line Utilities
+      uses: android-actions/setup-android@v3
 
-    - name: Compile Debug APK
-      run: gradle :app:assembleDebug --stacktrace --no-daemon
+    - name: Generate Native Gradle Wrapper Files
+      run: |
+        # This initializes the official system environment binaries on the fly
+        gradle wrapper --gradle-version 8.1.1
+        chmod +x gradlew
 
-    - name: Upload Finished APK
+    - name: Compile Debug APK Binary
+      run: ./gradlew assembleDebug --stacktrace --no-daemon
+
+    - name: Upload Finished APK Installer
       uses: actions/upload-artifact@v4
       with:
         name: torch-streamer-apk
