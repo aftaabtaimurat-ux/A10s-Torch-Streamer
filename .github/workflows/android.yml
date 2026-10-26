@@ -18,13 +18,13 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Generate Local Wrapper Scripts
-      run: |
-        gradle wrapper --gradle-version 8.1.1
-        chmod +x gradlew
+    - name: Set up Gradle System
+      uses: gradle/actions/setup-gradle@v4
+      with:
+        gradle-version: 8.1.1
 
     - name: Compile Application Debug APK
-      run: ./gradlew :app:assembleDebug --stacktrace --no-daemon
+      run: gradle :app:assembleDebug --stacktrace --no-daemon
 
     - name: Upload Finalized APK
       uses: actions/upload-artifact@v4
