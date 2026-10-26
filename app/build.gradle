@@ -1,6 +1,6 @@
 plugins {
-    id 'com.android.application' version '8.1.1'
-    id 'org.jetbrains.kotlin.android' version '1.8.10'
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
 }
 
 android {
@@ -15,19 +15,11 @@ android {
         versionName "1.0"
     }
 
-    // Tells the compiler to look right here in the root folder for code files
-    sourceSets {
-        main {
-            manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['.']
-            res.srcDirs = [] // Removes requirement for a layout XML file
+    buildTypes {
+        release {
+            minifyEnabled false
         }
     }
-}
-
-repositories {
-    google()
-    mavenCentral()
 }
 
 dependencies {
