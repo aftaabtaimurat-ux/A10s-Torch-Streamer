@@ -1,13 +1,12 @@
-buildscript {
-    repositories { google(); mavenCentral() }
-    dependencies { classpath 'com.android.tools.build:gradle:8.1.1' }
-}
 plugins {
-    id 'com.android.application' version '8.1.1' id 'org.jetbrains.kotlin.android' version '1.8.10'
+    id 'com.android.application' version '8.1.1'
+    id 'org.jetbrains.kotlin.android' version '1.8.10'
 }
+
 android {
     namespace 'com.example.torchstreamer'
     compileSdk 33
+
     defaultConfig {
         applicationId "com.example.torchstreamer"
         minSdk 24
@@ -15,8 +14,22 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
+    // Tells the compiler to look right here in the root folder for code files
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['.']
+            res.srcDirs = [] // Removes requirement for a layout XML file
+        }
+    }
 }
-repositories { google(); mavenCentral() }
+
+repositories {
+    google()
+    mavenCentral()
+}
+
 dependencies {
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
