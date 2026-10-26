@@ -18,16 +18,16 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Install Android Tools
-      uses: android-actions/setup-android@v3
+    - name: Set up Gradle Environment
+      uses: gradle/actions/setup-gradle@v4
+      with:
+        gradle-version: 8.1.1
 
-    - name: Create Gradle Environment
+    - name: Compile Application Debug APK Fast
       run: |
-        gradle wrapper --gradle-version 8.1.1
-        chmod +x gradlew
-
-    - name: Compile Application Debug APK
-      run: ./gradlew :app:assembleDebug --stacktrace --no-daemon
+        # --no-daemon stops background freezes
+        # --parallel uses all processor cores to finish under 2 minutes
+        gradle :app:assembleDebug --no-daemon --parallel --build-cache
 
     - name: Upload Finalized APK
       uses: actions/upload-artifact@v4
